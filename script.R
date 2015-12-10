@@ -60,7 +60,7 @@ plot(cultural_proj,col=mapcols,pch=20)
 
 
 brks <- c(25,30,35,40,45,50,55,60,65)
-cols <- brewer.pal(8,"Greens")
+cols <- brewer.pal(8,"Purples")
 
 mapcols <- cols[findInterval(florida$DP0020001, vec=brks)]
 plot(florida,col=mapcols,border="white")
@@ -73,7 +73,7 @@ library(ggplot2)
 
 fl_shapes <- fortify(florida,region="GEOID10")
 
-ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020001), map=fl_shapes) + expand_limits(x=fl_shapes$long, y=fl_shapes$lat) + scale_fill_gradient2(low="green",mid="white",high="blue",midpoint=47,limits=c(29,65)) + coord_map(projection="mercator")
+ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020001), map=fl_shapes) + expand_limits(x=fl_shapes$long, y=fl_shapes$lat) + scale_fill_gradient2(low="seagreen",mid="white",high="darkorchid4",midpoint=47,limits=c(29,65)) + coord_map(projection="mercator")
 
 #networky type example
 
