@@ -40,6 +40,9 @@ Load `maptools`, a library for reading and manipulating geographic data, includi
 library(maptools)
 ```
 The following prompts you to select the provided county census shapefiles at the path ...county_census/Count_2010Census_DP1.shp. Note: You will have to unzip the folder county_census first!
+
+###"+proj=longlat +datum=WGS84" = unprojected prj4
+
 ```
 counties <- readShapeSpatial(file.choose(),proj4string=CRS("+proj=longlat +datum=WGS84"))
 ```
@@ -56,8 +59,8 @@ plot(florida)
 
 You can look up other state and county codes using the U.S. Census Bureau site: https://www.census.gov/geo/reference/codes/cou.html
 
-###Projection and Layering
-Next we'll work with library `rgdal`, a package for working with projection and transformation of geospatial data. We want to find a projection appropriate for Florida. Make the EPSG data frame of projections (use `?make_EPSG()` to find out more about this table):
+###Projection and Layering with RGDAL
+Next we'll work with library `rgdal`, a package for working with projections and transformations of geospatial data. We're going to read in a shape file of cultural points in Florida from the supplied data using function `readShapeSpatial()`. This function takes a `prj4`, a string containing the projection information of the shapefile, as an argument. We know already that our shapefile uses NAD83(HARN) / Florida GDL Albers. We can make the EPSG data frame of projections  to find the `prj4` string for this projecttion (use `?make_EPSG()` to find out more about this table):
 ```
 library(rgdal)
 EPSG <- make_EPSG()
@@ -89,27 +92,28 @@ tabl <- "
 "
 cat(tabl) # output the table in a format good for HTML/PDF/docx conversion
 ```
-Let's use Florida GDL Albers. Using the code from the inspected dataframe, we can store the `prj4` variable, a string containing all the relevant information about our chosen projection:
+We see the code is 3087. Extract the `prj4` string from this dataframe:
 ```
 subset(EPSG, code==3087)
 prjstring <- subset(EPSG, code==3087)$prj4
 ```
-Inspect our `prjstring` variable to see the format of the `prj4` variable.
+Inspect our `prjstring` variable if you want to see the format of the `prj4` variable.
 
 
 ## select cultural shapefile in cultural_centers
-Next we'll overlay Florida cultural centers. The following prompts you to select the desired input shape file. Select ...cultural_centers/gc_culturecenter_oct15.shp.
+Now that we have the appropriate `prj4` we can read in the cultural centers data. The following prompts you to select the shape file. Select the actual `.shp` file in the provided data from  ...cultural_centers/gc_culturecenter_oct15.shp.
 
 ```
 cultural <- readShapeSpatial(file.choose(),proj4string=CRS(prjstring))
 ```
-Notice that we're using the projection that we chose in the previous section. Next we want to...WHAT IS THIS TRANSFORM DOING?
+Before we overlay the cultural points, we need to transform this layer to match that of the Florida counties layer - simple longitude and latitude in WGS84:
 ```
 cultural_proj <- spTransform(cultural, CRS("+proj=longlat +datum=WGS84"))
 
 plot(florida)
 points(cultural_proj)
 ```
+<center>![Florida with cultural points](figures/florida_cultural_points.png)</center>
 
 
 #join polygon data to points
