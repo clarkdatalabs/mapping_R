@@ -1,9 +1,9 @@
 ---
 title: "mapping_R Markup"
 output:
-  html_document: default
   md_document:
     variant: markdown_github
+  html_document: default
   pdf_document: default
 ---
 
