@@ -105,6 +105,14 @@ Before we overlay the cultural points, we need to transform this layer to match 
 <center>
 ![Florida with cultural points](figures/florida_cultural_points.png)
 </center>
+You can play around with the symbology for your map with some additional arguments in the `points` function. For example:
+
+    plot(florida)
+    points(cultural_proj, cex=.8, pch=24, col=554, bg="grey")
+
+<center>
+![Florida with cultural triangles](figures/florida_cultural_points2.png)
+</center>
 join polygon data to points
 ===========================
 
