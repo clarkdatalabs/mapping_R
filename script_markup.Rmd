@@ -1,10 +1,10 @@
 ---
 title: "mapping_R Markup"
 output:
+  pdf_document: default
   md_document:
     variant: markdown_github
   html_document: default
-  pdf_document: default
 ---
 
 ##R packages for working with geospatial data
@@ -40,7 +40,7 @@ We need an api key to access the ACS data. Visit http://api.census.gov/data/key_
 ```
 api.key.install("<ACS API key>")
 ```
-```{r, include=FALSE} <!-- Dan's API key for generating the markdown -->
+```{r, include=FALSE}
 api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")
 ```
 Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
@@ -49,7 +49,6 @@ Great, now we have access to the census data. Table B19301 contains per capita i
 county_choropleth_acs(tableId="B19301")
 ```
 <!-- PLOT FROM LOCAL: ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png) -->
-
 
 To see the description of a function and its arguments in R, place a "?" before its name:
 ```
@@ -65,11 +64,7 @@ library(maptools)
 library(rgdal)
 ```
 
-In this example we will work with the data provided along with this tutorial. Make sure you have unzipped the folder county_census before proceeding!
-
-The following prompts you to select the provided county census shapefiles at the path ...county_census/County_2010Census_DP1.shp. Note: You will have to unzip the folder county_census first!
-
-###"+proj=longlat +datum=WGS84" = unprojected prj4
+In this example we will work with the data provided along with this tutorial. **Make sure you have unzipped the folder county_census before proceeding!** The following prompts you to select the provided county census shapefiles at the path ...county_census/County_2010Census_DP1.shp.
 
 ```
 counties <- readShapeSpatial(file.choose(),proj4string=CRS("+proj=longlat +datum=WGS84"))
@@ -140,9 +135,10 @@ cultural_proj$pop <- county_data$DP0010001
 ```
 
 #set colors
-```
+```{r, message=FALSE}
 library(RColorBrewer)
-
+```
+```
 brks <- c(.5,1,1.5,2) * 1000000
 cols <- brewer.pal(5,"Greens")
 
@@ -172,7 +168,7 @@ ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020
 ```
 
 #networky type example
-```
+```{r, message=FALSE}
 library(maps)
 library(geosphere)
 library(reshape)

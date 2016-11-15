@@ -34,13 +34,13 @@ We need an api key to access the ACS data. Visit <http://api.census.gov/data/key
 
     api.key.install("<ACS API key>")
 
-`{r, include=FALSE} <!-- Dan's API key for generating the markdown --> api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")` Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
+Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
 
 ``` r
 county_choropleth_acs(tableId="B19301")
 ```
 
-![](script_markup_files/figure-markdown_github/unnamed-chunk-2-1.png) <!-- PLOT FROM LOCAL: ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png) -->
+![](script_markup_files/figure-markdown_github/unnamed-chunk-3-1.png) <!-- PLOT FROM LOCAL: ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png) -->
 
 To see the description of a function and its arguments in R, place a "?" before its name:
 
@@ -56,11 +56,7 @@ library(maptools)
 library(rgdal)
 ```
 
-In this example we will work with the data provided along with this tutorial. Make sure you have unzipped the folder county\_census before proceeding!
-
-The following prompts you to select the provided county census shapefiles at the path ...county\_census/County\_2010Census\_DP1.shp. Note: You will have to unzip the folder county\_census first!
-
-### "+proj=longlat +datum=WGS84" = unprojected prj4
+In this example we will work with the data provided along with this tutorial. **Make sure you have unzipped the folder county\_census before proceeding!** The following prompts you to select the provided county census shapefiles at the path ...county\_census/County\_2010Census\_DP1.shp.
 
     counties <- readShapeSpatial(file.choose(),proj4string=CRS("+proj=longlat +datum=WGS84"))
 
@@ -166,7 +162,9 @@ join polygon data to points
 set colors
 ==========
 
-    library(RColorBrewer)
+``` r
+library(RColorBrewer)
+```
 
     brks <- c(.5,1,1.5,2) * 1000000
     cols <- brewer.pal(5,"Greens")
@@ -195,9 +193,11 @@ set colors
 networky type example
 =====================
 
-    library(maps)
-    library(geosphere)
-    library(reshape)
+``` r
+library(maps)
+library(geosphere)
+library(reshape)
+```
 
 select - state\_shapes/tl\_2014\_us\_state.shp
 ==============================================
