@@ -1,7 +1,7 @@
-Geospatial R Packages
-=====================
+R packages for working with geospatial data
+-------------------------------------------
 
-Each example below starts by loading the dependant libraries. Make sure you have installed the packaes below that you will be using:
+Each example below starts by loading the dependant libraries. Make sure you have installed the packages below that you will be using:
 
     install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","mapproj","RColorBrewer","maps","geosphere","rgdal","reshape","ggplot2"))
 
@@ -20,45 +20,57 @@ Each example below starts by loading the dependant libraries. Make sure you have
 -   **reshape** - ???
 -   **ggplot2** - package for creating and customizing graphics is R.
 
-Example 1: Mapping Census Data using ACS and Choroplethr
+Example 1: mapping census data using ACS and choroplethr
 --------------------------------------------------------
 
-    library(acs)
-    library(choroplethr)
+Dependancies: `acs`, `choroplethr`, `choroplethrMaps`
+
+``` r
+library(acs)
+library(choroplethr)
+```
 
 We need an api key to access the ACS data. Visit <http://api.census.gov/data/key_signup.html>, request a key, and paste it into the line below:
 
-    api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")
+    api.key.install("<ACS API key>")
 
-Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
+`{r, include=FALSE} <!-- Dan's API key for generating the markdown --> api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")` Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
 
-    county_choropleth_acs(tableId="B19301")
+``` r
+county_choropleth_acs(tableId="B19301")
+```
 
-<center>
-![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png)
-</center>
+![](script_markup_files/figure-markdown_github/unnamed-chunk-2-1.png) <!-- PLOT FROM LOCAL: ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png) -->
+
 To see the description of a function and its arguments in R, place a "?" before its name:
 
     ?county_choropleth_acs
 
-Reading in Shapefiles ans Setting Projections
-=============================================
+Example 2: working with shapefiles and projections
+--------------------------------------------------
 
-Load `maptools`, a library for reading and manipulating geographic data, including ESRI shapefiles.
+Dependancies: `maptools`, `rgdal`
 
-    library(maptools)
+``` r
+library(maptools)
+library(rgdal)
+```
 
-The following prompts you to select the provided county census shapefiles at the path ...county\_census/Count\_2010Census\_DP1.shp. Note: You will have to unzip the folder county\_census first!
+In this example we will work with the data provided along with this tutorial. Make sure you have unzipped the folder county\_census before proceeding!
+
+The following prompts you to select the provided county census shapefiles at the path ...county\_census/County\_2010Census\_DP1.shp. Note: You will have to unzip the folder county\_census first!
 
 ### "+proj=longlat +datum=WGS84" = unprojected prj4
 
     counties <- readShapeSpatial(file.choose(),proj4string=CRS("+proj=longlat +datum=WGS84"))
 
-Let's inspect the first few rows of the counties data to get a feel for its structure:
+Note that the second parameter of the maptools function `readShapeSpatial` was a string representing the projection of the data, called a `prj4` string. So far we've used "+proj=longlat +datum=WGS84", which is simply unprojected longitude and latitude coordinates.
+
+Inspect the first few rows of the counties data to get a feel for its structure:
 
     head(counties@data)
 
-Census data assigns codes to counties using the Federal Information Processing Standard (FIPS). A FIPS code starts with two digits representing the state, and is followed by three digits representing the county. For example, Florida is 12 and Clay County Florida is 12019. So to select all the counties in Florida, we can use a regular expression matching all codes that start with "12":
+Census data assigns codes to counties using the Federal Information Processing Standard (FIPS). A FIPS code starts with two digits representing the state, and is followed by three digits representing the county. For example, Florida is 12 and Clay County Florida is 12019. To select all the counties in Florida we can use a regular expression matching all codes that start with "12":
 
     florida <- counties[substring(counties$GEOID10,1,2)=="12",]
     plot(florida)
@@ -70,42 +82,58 @@ You can look up other state and county codes using the U.S. Census Bureau site: 
 
 ### Projection and Layering with RGDAL
 
-Next we'll work with library `rgdal`, a package for working with projections and transformations of geospatial data. We're going to read in a shape file of cultural points in Florida from the supplied data using function `readShapeSpatial()`. This function takes a `prj4`, a string containing the projection information of the shapefile, as an argument. We know already that our shapefile uses NAD83(HARN) / Florida GDL Albers. We can make the EPSG data frame of projections to find the `prj4` string for this projecttion (use `?make_EPSG()` to find out more about this table):
+Next we'll work more with projections using library `rgdal`. We're going to read in a shape file of cultural points in Florida from the supplied data, again using function `readShapeSpatial()`. We know already that our cultural centers layer uses NAD83(HARN) / Florida GDL Albers. We can make the EPSG data frame of projections to find the `prj4` string for this projection (use `?make_EPSG()` to find out more about this table):
 
-    library(rgdal)
-    EPSG <- make_EPSG()
+``` r
+library(rgdal)
+EPSG <- make_EPSG()
+```
 
 We can use regular expressions to search the note field of `EPSG` for any that refer to Florida:
 
-    EPSG[grep("florida", EPSG$note, ignore.case=TRUE), 1:2]
+``` r
+EPSG[grep("florida", EPSG$note, ignore.case=TRUE), 1:2]
+```
 
-| code | note                                     |
-|------|------------------------------------------|
-| 2236 | \# NAD83 / Florida East (ftUS)           |
-| 2237 | \# NAD83 / Florida West (ftUS)           |
-| 2238 | \# NAD83 / Florida North (ftUS)          |
-| 2777 | \# NAD83(HARN) / Florida East            |
-| 2778 | \# NAD83(HARN) / Florida West            |
-| 2779 | \# NAD83(HARN) / Florida North           |
-| 2881 | \# NAD83(HARN) / Florida East (ftUS)     |
-| 2882 | \# NAD83(HARN) / Florida West (ftUS)     |
-| 2883 | \# NAD83(HARN) / Florida North (ftUS)    |
-| 3086 | \# NAD83 / Florida GDL Albers            |
-| 3087 | \# NAD83(HARN) / Florida GDL Albers      |
-| 3511 | \# NAD83(NSRS2007) / Florida East        |
-| 3512 | \# NAD83(NSRS2007) / Florida East (ftUS) |
-| 3513 | \# NAD83(NSRS2007) / Florida GDL Albers  |
-| 3514 | \# NAD83(NSRS2007) / Florida North       |
+    ##       code                                     note
+    ## 705   2236            # NAD83 / Florida East (ftUS)
+    ## 706   2237            # NAD83 / Florida West (ftUS)
+    ## 707   2238           # NAD83 / Florida North (ftUS)
+    ## 1245  2777             # NAD83(HARN) / Florida East
+    ## 1246  2778             # NAD83(HARN) / Florida West
+    ## 1247  2779            # NAD83(HARN) / Florida North
+    ## 1349  2881      # NAD83(HARN) / Florida East (ftUS)
+    ## 1350  2882      # NAD83(HARN) / Florida West (ftUS)
+    ## 1351  2883     # NAD83(HARN) / Florida North (ftUS)
+    ## 1553  3086             # NAD83 / Florida GDL Albers
+    ## 1554  3087       # NAD83(HARN) / Florida GDL Albers
+    ## 1978  3511         # NAD83(NSRS2007) / Florida East
+    ## 1979  3512  # NAD83(NSRS2007) / Florida East (ftUS)
+    ## 1980  3513   # NAD83(NSRS2007) / Florida GDL Albers
+    ## 1981  3514        # NAD83(NSRS2007) / Florida North
+    ## 1982  3515 # NAD83(NSRS2007) / Florida North (ftUS)
+    ## 1983  3516         # NAD83(NSRS2007) / Florida West
+    ## 1984  3517  # NAD83(NSRS2007) / Florida West (ftUS)
+    ## 3074  6437             # NAD83(2011) / Florida East
+    ## 3075  6438      # NAD83(2011) / Florida East (ftUS)
+    ## 3076  6439       # NAD83(2011) / Florida GDL Albers
+    ## 3077  6440            # NAD83(2011) / Florida North
+    ## 3078  6441     # NAD83(2011) / Florida North (ftUS)
+    ## 3079  6442             # NAD83(2011) / Florida West
+    ## 3080  6443      # NAD83(2011) / Florida West (ftUS)
+    ## 3747 26758                   # NAD27 / Florida East
+    ## 3748 26759                   # NAD27 / Florida West
+    ## 3749 26760                  # NAD27 / Florida North
+    ## 3895 26958                   # NAD83 / Florida East
+    ## 3896 26959                   # NAD83 / Florida West
+    ## 3897 26960                  # NAD83 / Florida North
 
-We see the code is 3087. Extract the `prj4` string from this dataframe:
+We see the code we're looking for is 3087. Extract the `prj4` string from this dataframe:
 
     subset(EPSG, code==3087)
     prjstring <- subset(EPSG, code==3087)$prj4
 
 Inspect our `prjstring` variable if you want to see the format of the `prj4` variable.
-
-select cultural shapefile in cultural\_centers
-----------------------------------------------
 
 Now that we have the appropriate `prj4` we can read in the cultural centers data. The following prompts you to select the shape file. Select the actual `.shp` file in the provided data from ...cultural\_centers/gc\_culturecenter\_oct15.shp.
 
@@ -130,7 +158,7 @@ You can play around with the symbology for your map with some additional argumen
 ![Florida with cultural triangles](figures/florida_cultural_points2.png)
 </center>
 join polygon data to points
-===========================
+---------------------------
 
     county_data <- over(cultural_proj,florida)
     cultural_proj$pop <- county_data$DP0010001
