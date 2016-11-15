@@ -1,11 +1,27 @@
-Setup
-=====
+Geospatial R Packages
+=====================
 
-The following are packages useful for working with GIS data in R. They only nee to be installed once!
+Each example below starts by loading the dependant libraries. Make sure you have installed the packaes below that you will be using:
 
     install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","mapproj","RColorBrewer","maps","geosphere","rgdal","reshape","ggplot2"))
 
-We start with a simple example plotting a cloropleth map using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access and plot this we need to load the following libraries:
+-   **ACS** & **choroplethr** - can be used together to easily make choroplethr maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit <http://api.census.gov/data/key_signup.html>, request a key, and paste it into the line below:
+
+        api.key.install("<ACS API key>")
+
+-   **choroplethrMaps** - contains maps of the USA used by the choroplethr package.
+-   **maptools** - contains functions for reading and manipulating geographic data, including ESRI shapefiles.
+-   **rgeos** - contains functions for performing geometric analysis. For example `gLength()` calculates the length of input geometry, while `gBuffer()` adds a buffer to an input feature.
+-   **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
+-   **RColorBrewer** - provides color schemes that are especially useful for creating thematic maps.
+-   **maps** another simple set of tools for creating maps, with links to several databases of spatial data.
+-   **geosphere** - supports trigonometric calculations for geographic applications. For example, computing distance to the horizon from a given location and altitude.
+-   **rgdal** - geospatial data abstraction and projection / transformation.
+-   **reshape** - ???
+-   **ggplot2** - package for creating and customizing graphics is R.
+
+Example 1: Mapping Census Data using ACS and Choroplethr
+--------------------------------------------------------
 
     library(acs)
     library(choroplethr)
@@ -25,8 +41,8 @@ To see the description of a function and its arguments in R, place a "?" before 
 
     ?county_choropleth_acs
 
-Reading in Shapefiles
-=====================
+Reading in Shapefiles ans Setting Projections
+=============================================
 
 Load `maptools`, a library for reading and manipulating geographic data, including ESRI shapefiles.
 

@@ -7,13 +7,28 @@ output:
   pdf_document: default
 ---
 
-#Setup
-The following are packages useful for working with GIS data in R. They only nee to be installed once!
+#Geospatial R Packages
+Each example below starts by loading the dependant libraries. Make sure you have installed the packaes below that you will be using:
 ```
 install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","mapproj","RColorBrewer","maps","geosphere","rgdal","reshape","ggplot2"))
 ```
 
-We start with a simple example plotting a cloropleth map using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access and plot this we need to load the following libraries:
+* **ACS** & **choroplethr** - can be used together to easily make choroplethr maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
+```
+api.key.install("<ACS API key>")
+```
+* **choroplethrMaps** - contains maps of the USA used by the choroplethr package.
+* **maptools** - contains functions for reading and manipulating geographic data, including ESRI shapefiles.
+* **rgeos** - contains functions for performing geometric analysis. For example `gLength()` calculates the length of input geometry, while `gBuffer()` adds a buffer to an input feature.
+* **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
+* **RColorBrewer** - provides color schemes that are especially useful for creating thematic maps.
+* **maps** another simple set of tools for creating maps, with links to several databases of spatial data.
+* **geosphere** - supports trigonometric calculations for geographic applications. For example, computing distance to the horizon from a given location and altitude.
+* **rgdal** - geospatial data abstraction and projection / transformation.
+* **reshape** - ???
+* **ggplot2** - package for creating and customizing graphics is R.
+
+##Example 1: Mapping Census Data using ACS and Choroplethr
 ```
 library(acs)
 library(choroplethr)
@@ -23,6 +38,7 @@ We need an api key to access the ACS data. Visit http://api.census.gov/data/key_
 api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")
 ```
 Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
+
 ```
 county_choropleth_acs(tableId="B19301")
 ```
@@ -33,7 +49,7 @@ To see the description of a function and its arguments in R, place a "?" before 
 ?county_choropleth_acs
 ```
 
-#Reading in Shapefiles
+#Reading in Shapefiles ans Setting Projections
 
 Load `maptools`, a library for reading and manipulating geographic data, including ESRI shapefiles.
 ```
@@ -60,7 +76,7 @@ plot(florida)
 You can look up other state and county codes using the U.S. Census Bureau site: https://www.census.gov/geo/reference/codes/cou.html
 
 ###Projection and Layering with RGDAL
-Next we'll work with library `rgdal`, a package for working with projections and transformations of geospatial data. We're going to read in a shape file of cultural points in Florida from the supplied data using function `readShapeSpatial()`. This function takes a `prj4`, a string containing the projection information of the shapefile, as an argument. We know already that our shapefile uses NAD83(HARN) / Florida GDL Albers. We can make the EPSG data frame of projections  to find the `prj4` string for this projecttion (use `?make_EPSG()` to find out more about this table):
+Next we'll work with library `rgdal`, a package for working with projections and transformations of geospatial data. We're going to read in a shape file of cultural points in Florida from the supplied data using function `readShapeSpatial()`. This function takes a `prj4`, a string containing the projection information of the shapefile, as an argument. We know already that our shapefile uses NAD83(HARN) / Florida GDL Albers. We can make the EPSG data frame of projections to find the `prj4` string for this projecttion (use `?make_EPSG()` to find out more about this table):
 ```
 library(rgdal)
 EPSG <- make_EPSG()
