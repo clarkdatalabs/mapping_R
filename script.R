@@ -16,7 +16,7 @@ county_choropleth_acs(tableId="B19301")
 
 library(maptools)
 
-#select - county_census/Count_2010Census_DP1.shp
+#select - county_census/County_2010Census_DP1.shp
 counties <- readShapeSpatial(file.choose(),proj4string=CRS("+proj=longlat +datum=WGS84"))
 
 ##see just the data

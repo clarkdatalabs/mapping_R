@@ -1,10 +1,10 @@
 ---
 title: "mapping_R Markup"
 output:
-  pdf_document: default
   md_document:
     variant: markdown_github
   html_document: default
+  pdf_document: default
 ---
 
 ##R packages for working with geospatial data
@@ -45,10 +45,10 @@ api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")
 ```
 Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
 
-```{r}
+```
 county_choropleth_acs(tableId="B19301")
 ```
-<!-- PLOT FROM LOCAL: ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png) -->
+![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png)
 
 To see the description of a function and its arguments in R, place a "?" before its name:
 ```
@@ -186,13 +186,17 @@ migration <- read.csv(file.choose())
 centrs <- data.frame(as.character(state@data$NAME),coordinates(state))
 colnames(centrs) <- c("name","long","lat")
 
+## Reshape - melt
 
 migration <- migration[c(1,6:56)]
-long_mig <- melt(migration,id.vars="from_state")
+long_mig <- melt(migration,id.vars="from_state") 
 
 map("state")
 ```
 # define draw_from_state function
+<just describe roighly what the following function does. If they want to use it, they can figure it out>
+
+
 ```
 draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alpha=0.5)) {
 	migrations$variable <- sub("."," ",migrations$variable,fixed=TRUE)

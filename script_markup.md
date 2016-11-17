@@ -212,9 +212,10 @@ select - /state\_migrations\_2014.csv
     centrs <- data.frame(as.character(state@data$NAME),coordinates(state))
     colnames(centrs) <- c("name","long","lat")
 
+    ## Reshape - melt
 
     migration <- migration[c(1,6:56)]
-    long_mig <- melt(migration,id.vars="from_state")
+    long_mig <- melt(migration,id.vars="from_state") 
 
     map("state")
 
