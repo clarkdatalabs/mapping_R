@@ -5,6 +5,7 @@ output:
     variant: markdown_github
   html_document: default
   pdf_document: default
+layout: default
 ---
 
 ##R packages for working with geospatial data
