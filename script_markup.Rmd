@@ -1,40 +1,48 @@
 ---
 title: "mapping_R Markup"
 output:
+  pdf_document: default
   md_document:
     variant: markdown_github
   html_document: default
-  pdf_document: default
 ---
 
-##R packages for working with geospatial data
-Each example below starts by loading the dependant libraries. Make sure you have installed the packages below that you will be using:
-```
+## Introduction to R packages for geospatial data
+
+This tutorial introduces a variety of R packages that may be used to manipulate and visualize geospatial data in R. Below we provide short descriptions of the packages used in each example throughout this tutorial, which can to be installed with the following code:
+```{r, eval=FALSE, tidy=TRUE}
 install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","mapproj","RColorBrewer","maps","geosphere","rgdal","reshape","ggplot2"))
 ```
 
-* **ACS** & **choroplethr** - can be used together to easily make choroplethr maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
-```
+### Packages used in:
+* Example 1: mapping census data
+    + **ACS** & **choroplethr** - can be used together to easily make choroplethr maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
+    + **choroplethrMaps** - contains a global map and maps of the USA used by the choroplethr package.
+```{r, eval=FALSE, tidy=TRUE}
 api.key.install("<ACS API key>")
 ```
-* **choroplethrMaps** - contains maps of the USA used by the choroplethr package.
-* **maptools** - contains functions for reading and manipulating geographic data, including ESRI shapefiles.
-* **rgeos** - contains functions for performing geometric analysis. For example `gLength()` calculates the length of input geometry, while `gBuffer()` adds a buffer to an input feature.
-* **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
-* **RColorBrewer** - provides color schemes that are especially useful for creating thematic maps.
-* **maps** another simple set of tools for creating maps, with links to several databases of spatial data.
-* **geosphere** - supports trigonometric calculations for geographic applications. For example, computing distance to the horizon from a given location and altitude.
-* **rgdal** - geospatial data abstraction and projection / transformation.
-* **reshape** - ???
-* **ggplot2** - package for creating and customizing graphics is R.
+ * Example 2: working with shapefiles, projections, and visualization
+    + **maptools** - contains functions for reading and manipulating geographic data, including ESRI shapefiles.
+    + **rgdal** - geospatial data abstraction and projection / transformation.
+    + **RColorBrewer** - provides color schemes that are especially useful for creating thematic maps.
+    + **ggplot2** - package for creating and customizing graphics is R.
+    + **rgeos** - contains functions for performing geometric analysis. For example `gLength()` calculates the length of input geometry, while `gBuffer()` adds a buffer to an input feature.
+    + **mapproj** - WHERE IS THIS USED? simple package for converting from latitude and logitude into projected coordinates.
+* Example 3: network-type map
+    + **maps** another simple set of tools for creating maps, with links to several databases of spatial data.
+    + **geosphere** - supports trigonometric calculations for geographic applications. For example, computing distance to the horizon from a given location and altitude.
+    + **reshape** - reshapes data from 'wide' format (where repeated measurements are located across multiple columns) to 'long' format (where repeated measurements are spread across unique rows) 
 
-##Example 1: mapping census data using ACS and choroplethr
 
-Dependancies: `acs`, `choroplethr`, `choroplethrMaps`
+# EXAMPLE 1: mapping census data 
+### Packages used - **ACS**, **choroplethr**, **choroplethrMaps**
 
-```{r message=FALSE}
+After installing (see introduction), load needed packages:
+
+```{r warning=FALSE, message=FALSE}
 library(acs)
 library(choroplethr)
+library(choroplethrMaps)
 ```
 We need an api key to access the ACS data. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
 ```
@@ -55,11 +63,10 @@ To see the description of a function and its arguments in R, place a "?" before 
 ?county_choropleth_acs
 ```
 
-## Example 2: working with shapefiles and projections
+# EXAMPLE 2: working with shapefiles, projections, and visualization
+### Packages used - **maptools, rgdal, RColorBrewer, ggplot2**
 
-Dependancies: `maptools`, `rgdal`
-
-```{r, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(maptools)
 library(rgdal)
 ```
@@ -98,7 +105,6 @@ We can use regular expressions to search the note field of `EPSG` for any that r
 EPSG[grep("florida", EPSG$note, ignore.case=TRUE), 1:2]
 ```
 
-
 We see the code we're looking for is 3087. Extract the `prj4` string from this dataframe:
 ```
 subset(EPSG, code==3087)
@@ -134,7 +140,7 @@ county_data <- over(cultural_proj,florida)
 cultural_proj$pop <- county_data$DP0010001
 ```
 
-#set colors
+## set colors
 ```{r, message=FALSE}
 library(RColorBrewer)
 ```
@@ -167,18 +173,19 @@ fl_shapes <- fortify(florida,region="GEOID10")
 ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020001), map=fl_shapes) + expand_limits(x=fl_shapes$long, y=fl_shapes$lat) + scale_fill_gradient2(low="seagreen",mid="white",high="darkorchid4",midpoint=47,limits=c(29,65)) + coord_map(projection="mercator")
 ```
 
-#networky type example
+# EXAMPLE 3: network-type map
+### Packages used - **maps, geosphere, reshape**
 ```{r, message=FALSE}
 library(maps)
 library(geosphere)
 library(reshape)
 ```
 
-# select - state_shapes/tl_2014_us_state.shp
+## select - state_shapes/tl_2014_us_state.shp
 ```
 state <- readShapeSpatial(file.choose())
 ```
-# select - /state_migrations_2014.csv
+## select - /state_migrations_2014.csv
 ```
 migration <- read.csv(file.choose())
 ```
@@ -193,7 +200,7 @@ long_mig <- melt(migration,id.vars="from_state")
 
 map("state")
 ```
-# define draw_from_state function
+## define draw_from_state function
 <just describe roighly what the following function does. If they want to use it, they can figure it out>
 
 

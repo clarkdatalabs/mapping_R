@@ -27,6 +27,11 @@ Dependancies: `acs`, `choroplethr`, `choroplethrMaps`
 
 ``` r
 library(acs)
+```
+
+    ## Warning: package 'XML' was built under R version 3.3.2
+
+``` r
 library(choroplethr)
 ```
 
@@ -36,11 +41,9 @@ We need an api key to access the ACS data. Visit <http://api.census.gov/data/key
 
 Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
 
-``` r
-county_choropleth_acs(tableId="B19301")
-```
+    county_choropleth_acs(tableId="B19301")
 
-![](script_markup_files/figure-markdown_github/unnamed-chunk-3-1.png) <!-- PLOT FROM LOCAL: ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png) -->
+![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png)
 
 To see the description of a function and its arguments in R, place a "?" before its name:
 
@@ -53,8 +56,15 @@ Dependancies: `maptools`, `rgdal`
 
 ``` r
 library(maptools)
+```
+
+    ## Warning: package 'maptools' was built under R version 3.3.2
+
+``` r
 library(rgdal)
 ```
+
+    ## Warning: package 'rgdal' was built under R version 3.3.2
 
 In this example we will work with the data provided along with this tutorial. **Make sure you have unzipped the folder county\_census before proceeding!** The following prompts you to select the provided county census shapefiles at the path ...county\_census/County\_2010Census\_DP1.shp.
 
@@ -221,6 +231,8 @@ select - /state\_migrations\_2014.csv
 
 define draw\_from\_state function
 =================================
+
+<just describe roighly what the following function does. If they want to use it, they can figure it out>
 
     draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alpha=0.5)) {
         migrations$variable <- sub("."," ",migrations$variable,fixed=TRUE)
