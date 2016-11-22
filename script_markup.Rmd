@@ -1,9 +1,9 @@
 ---
 title: "mapping_R Markup"
 output:
+  html_document: default
   md_document:
     variant: markdown_github
-  html_document: default
   pdf_document: default
   word_document: default
 ---
@@ -63,6 +63,14 @@ To see the description of a function and its arguments in R, place a "?" before 
 ```{r, eval=FALSE}
 ?county_choropleth_acs
 ```
+You can explore the ACS data on the Census Bureau's website: http://factfinder.census.gov/faces/nav/jsf/pages/searchresults.xhtml
+Be sure to set the dataset to one of the ACS sources under Topics -> dataset. Use the ID column to find your tableID variable. Here's another example to get you started playing around with these functions:
+```{r, eval=FALSE, tidy=TRUE}
+state_choropleth_acs("B01002", num_colors=1, zoom=c("texas", "louisiana", "mississippi", "alabama", "georgia", "florida"))
+```
+\pagebreak
+![US state chloropleth using ACS Median Age by Sex](figures/state_choropleth_acs.png)
+
 
 # EXAMPLE 2: working with shapefiles, projections, and visualization
 ### Packages used - **maptools, rgdal, RColorBrewer, ggplot2**

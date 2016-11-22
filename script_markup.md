@@ -63,6 +63,15 @@ To see the description of a function and its arguments in R, place a "?" before 
 ?county_choropleth_acs
 ```
 
+You can explore the ACS data on the Census Bureau's website: <http://factfinder.census.gov/faces/nav/jsf/pages/searchresults.xhtml> Be sure to set the dataset to one of the ACS sources under Topics -&gt; dataset. Use the ID column to find your tableID variable. Here's another example to get you started playing around with these functions:
+
+``` r
+state_choropleth_acs("B01002", num_colors = 1, zoom = c("texas", "louisiana", 
+    "mississippi", "alabama", "georgia", "florida"))
+```
+
+![US state chloropleth using ACS Median Age by Sex](figures/state_choropleth_acs.png)
+
 EXAMPLE 2: working with shapefiles, projections, and visualization
 ==================================================================
 
