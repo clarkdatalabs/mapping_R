@@ -1,10 +1,11 @@
 ---
 title: "mapping_R Markup"
 output:
-  pdf_document: default
   md_document:
     variant: markdown_github
   html_document: default
+  pdf_document: default
+  word_document: default
 ---
 
 ## Introduction to R packages for geospatial data
@@ -16,7 +17,7 @@ install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","map
 
 ### Packages used in:
 * Example 1: mapping census data
-    + **ACS** & **choroplethr** - can be used together to easily make choroplethr maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
+    + **ACS** & **choroplethr** - can be used together to easily make choroplethGCT-PEPANNRES maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
     + **choroplethrMaps** - contains a global map and maps of the USA used by the choroplethr package.
 ```{r, eval=FALSE, tidy=TRUE}
 api.key.install("<ACS API key>")
@@ -45,7 +46,7 @@ library(choroplethr)
 library(choroplethrMaps)
 ```
 We need an api key to access the ACS data. Visit http://api.census.gov/data/key_signup.html, request a key, and paste it into the line below:
-```
+```{r, eval=FALSE}
 api.key.install("<ACS API key>")
 ```
 ```{r, include=FALSE}
@@ -53,13 +54,13 @@ api.key.install("e3dd607b83adce3268ef2bb723da22c68001e6f0")
 ```
 Great, now we have access to the census data. Table B19301 contains per capita income for the year of 2011. Lets plot it!
 
-```
+```{r, eval=FALSE}
 county_choropleth_acs(tableId="B19301")
 ```
 ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png)
 
 To see the description of a function and its arguments in R, place a "?" before its name:
-```
+```{r, eval=FALSE}
 ?county_choropleth_acs
 ```
 
@@ -73,18 +74,18 @@ library(rgdal)
 
 In this example we will work with the data provided along with this tutorial. **Make sure you have unzipped the folder county_census before proceeding!** The following prompts you to select the provided county census shapefiles at the path ...county_census/County_2010Census_DP1.shp.
 
-```
+```{r, eval=FALSE}
 counties <- readShapeSpatial(file.choose(),proj4string=CRS("+proj=longlat +datum=WGS84"))
 ```
 
 Note that the second parameter of the maptools function `readShapeSpatial` was a string representing the projection of the data, called a `prj4` string. So far we've used "+proj=longlat +datum=WGS84", which is simply unprojected longitude and latitude coordinates.
 
 Inspect the first few rows of the counties data to get a feel for its structure:
-```
+```{r, eval=FALSE}
 head(counties@data)
 ```
 Census data assigns codes to counties using the Federal Information Processing Standard (FIPS). A FIPS code starts with two digits representing the state, and is followed by three digits representing the county. For example, Florida is 12 and Clay County Florida is 12019. To select all the counties in Florida we can use a regular expression matching all codes that start with "12":
-```
+```{r, eval=FALSE}
 florida <- counties[substring(counties$GEOID10,1,2)=="12",]
 plot(florida)
 ```
@@ -106,7 +107,7 @@ EPSG[grep("florida", EPSG$note, ignore.case=TRUE), 1:2]
 ```
 
 We see the code we're looking for is 3087. Extract the `prj4` string from this dataframe:
-```
+```{r, eval=FALSE}
 subset(EPSG, code==3087)
 prjstring <- subset(EPSG, code==3087)$prj4
 ```
@@ -114,11 +115,11 @@ Inspect our `prjstring` variable if you want to see the format of the `prj4` var
 
 Now that we have the appropriate `prj4` we can read in the cultural centers data. The following prompts you to select the shape file. Select the actual `.shp` file in the provided data from  ...cultural_centers/gc_culturecenter_oct15.shp.
 
-```
+```{r, eval=FALSE}
 cultural <- readShapeSpatial(file.choose(),proj4string=CRS(prjstring))
 ```
 Before we overlay the cultural points, we need to transform this layer to match that of the Florida counties layer - simple longitude and latitude in WGS84:
-```
+```{r, eval=FALSE}
 cultural_proj <- spTransform(cultural, CRS("+proj=longlat +datum=WGS84"))
 
 plot(florida)
@@ -127,7 +128,7 @@ points(cultural_proj)
 <center>![Florida with cultural points](figures/florida_cultural_points.png)</center>
 
 You can play around with the symbology for your map with some additional arguments in the `points` function. For example:
-```
+```{r, eval=FALSE}
 plot(florida)
 points(cultural_proj, cex=.8, pch=24, col=554, bg="grey")
 ```
@@ -135,7 +136,7 @@ points(cultural_proj, cex=.8, pch=24, col=554, bg="grey")
 
 
 ##join polygon data to points
-```
+```{r, eval=FALSE}
 county_data <- over(cultural_proj,florida)
 cultural_proj$pop <- county_data$DP0010001
 ```
@@ -144,7 +145,7 @@ cultural_proj$pop <- county_data$DP0010001
 ```{r, message=FALSE}
 library(RColorBrewer)
 ```
-```
+```{r, eval=FALSE}
 brks <- c(.5,1,1.5,2) * 1000000
 cols <- brewer.pal(5,"Greens")
 
@@ -154,7 +155,7 @@ plot(cultural_proj,col=mapcols,pch=20)
 
 ####base R instructions for choropleth
 
-```
+```{r, eval=FALSE}
 brks <- c(25,30,35,40,45,50,55,60,65)
 cols <- brewer.pal(8,"Purples")
 
@@ -165,8 +166,10 @@ legend("bottomleft", legend = levels(cut(florida$DP0020001, brks)), fill = cols,
 ```
 
 ###using ggplot2
-```
+```{r, message=FALSE}
 library(ggplot2)
+```
+```{r, eval=FALSE}
 
 fl_shapes <- fortify(florida,region="GEOID10")
 
@@ -182,29 +185,29 @@ library(reshape)
 ```
 
 ## select - state_shapes/tl_2014_us_state.shp
-```
+```{r, eval=FALSE}
 state <- readShapeSpatial(file.choose())
 ```
 ## select - /state_migrations_2014.csv
-```
+```{r, eval=FALSE}
 migration <- read.csv(file.choose())
 ```
-```
+```{r, eval=FALSE}
 centrs <- data.frame(as.character(state@data$NAME),coordinates(state))
 colnames(centrs) <- c("name","long","lat")
-
+```
 ## Reshape - melt
-
+```{r, eval=FALSE}
 migration <- migration[c(1,6:56)]
 long_mig <- melt(migration,id.vars="from_state") 
 
 map("state")
 ```
 ## define draw_from_state function
-<just describe roighly what the following function does. If they want to use it, they can figure it out>
+<just describe roughly what the following function does. If they want to use it, they can figure it out>
 
 
-```
+```{r, eval=FALSE}
 draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alpha=0.5)) {
 	migrations$variable <- sub("."," ",migrations$variable,fixed=TRUE)
 	migrations <- migrations[migrations$variable==state_name & migrations$from_state != state_name,]
@@ -220,11 +223,11 @@ draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alph
 	}
 }
 ```
-```
+```{r, eval=FALSE}
 draw_from_state(centrs, long_mig, "Florida", rgb(0,0,1,0.5))
 ```
 
-```
+```{r, eval=FALSE}
 xlim <- c(-171.738281, -56.601563)
 ylim <- c(12.039321, 71.856229)
 map("world", col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05, xlim=xlim, ylim=ylim)
