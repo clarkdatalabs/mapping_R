@@ -216,6 +216,9 @@ mapcols <- cols[findInterval(cultural_proj$pop, vec=brks)]
 plot(cultural_proj,col=mapcols,pch=20)
 ```
 
+<center>
+![](figures/florida_cultural_points_by_pop.png)
+</center>
 #### base R instructions for choropleth
 
 ``` r
@@ -228,6 +231,9 @@ plot(florida,col=mapcols,border="white")
 legend("bottomleft", legend = levels(cut(florida$DP0020001, brks)), fill = cols, title = "Median Age")
 ```
 
+<center>
+![](figures/florida_choropleth.png)
+</center>
 ### using ggplot2
 
 ``` r
@@ -240,10 +246,13 @@ fl_shapes <- fortify(florida,region="GEOID10")
 ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020001), map=fl_shapes) + expand_limits(x=fl_shapes$long, y=fl_shapes$lat) + scale_fill_gradient2(low="seagreen",mid="white",high="darkorchid4",midpoint=47,limits=c(29,65)) + coord_map(projection="mercator")
 ```
 
+<center>
+![](figures/florida_2.png)
+</center>
 EXAMPLE 3: network-type map
 ===========================
 
-### Packages used - **maps, geosphere, reshape**
+### Packages used - **maps, geosphere, reshape, maptools**
 
 ``` r
 library(maps)
@@ -280,6 +289,9 @@ long_mig <- melt(migration,id.vars="from_state")
 map("state")
 ```
 
+<center>
+![](figures/state_outlines.png)
+</center>
 define draw\_from\_state function
 ---------------------------------
 
@@ -306,6 +318,9 @@ draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alph
 draw_from_state(centrs, long_mig, "Florida", rgb(0,0,1,0.5))
 ```
 
+<center>
+![](figures/paths_from_florida.png)
+</center>
 ``` r
 xlim <- c(-171.738281, -56.601563)
 ylim <- c(12.039321, 71.856229)
@@ -313,3 +328,7 @@ map("world", col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05, xlim=xlim, ylim=yli
 
 draw_from_state(centrs, long_mig, "Wyoming", rgb(1,0,0,.5))
 ```
+
+<center>
+![](figures/paths_from_wyoming.png)
+</center>
