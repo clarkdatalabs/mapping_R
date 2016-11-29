@@ -1,6 +1,6 @@
 {
   "name": "Mapping R",
   "tagline": "",
-  "body": "### Welcome to Mapping with R\r\nA workshop for mapping with R.\r\n---\r\nDownload the data for this workshop using the tar.gz or .zip folders above. Workshop instructions are available as a .pdf in the downloaded files, or [as a webpage](http://clarkdatalabs.github.io/mapping_R/workshop).\r\n",
+  "body": "### Welcome to Mapping with R\r\nA workshop for mapping with R.\r\n---\r\nDownload the data for this workshop using the tar.gz or .zip folders above. Workshop instructions are available as a .pdf in the downloaded files or on [this webpage](http://clarkdatalabs.github.io/mapping_R/workshop).\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
