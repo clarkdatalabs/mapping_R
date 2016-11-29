@@ -35,8 +35,10 @@ install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","map
 ## Brief Overview:
 
 # EXAMPLE 1: Mapping Census Data 
-### Packages used - **ACS**, **choroplethr**, **choroplethrMaps**
 
+*This example introduces how to access and plot American Community Survey (ACS) yearly census data by the U.S. Census Bureau through choropleth maps.*  
+
+Packages used: **ACS**, **choroplethr**, **choroplethrMaps**  
 After installing packages (see introduction), load needed packages:
 
 ```{r warning=FALSE, message=FALSE}
@@ -72,8 +74,10 @@ state_choropleth_acs("B01002", num_colors=1, zoom=c("texas", "louisiana", "missi
 
 
 # EXAMPLE 2: Working with Shapefiles, Projections, and Visualization
-### Packages used - **maptools, rgdal, RColorBrewer, ggplot2**
 
+*This example loads and plots both polygon and point shapefiles, uses the `rgdal` library to change projections, uses the `over` function to join datasets, and provides a few visualization examples.*  
+
+Packages used: **maptools, rgdal, RColorBrewer, ggplot2**  
 After installing packages (see introduction), load needed packages:
 
 ```{r, warning=FALSE, message=FALSE}
@@ -191,8 +195,10 @@ ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020
 <center>![](figures/florida_2.png)</center>
 
 # EXAMPLE 3: Migration Distances Map
-### Packages used - **maps, geosphere, reshape, maptools**
 
+*This example loads both a shapefile and .csv file, transforms the data set with a melt function, and writes a function that maps the distance data contained in the .csv file.*  
+
+Packages used: **maps, geosphere, reshape, maptools**  
 After installing packages (see introduction), load needed packages:
 ```{r, warning=FALSE, message=FALSE}
 library(maps)
