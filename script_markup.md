@@ -10,7 +10,7 @@ install.packages(c("acs", "choroplethr", "choroplethrMaps", "maptools", "rgeos",
 
 ### Packages used in:
 
--   Example 1: mapping census data
+-   EXAMPLE 1: Mapping Census Data
     -   **ACS** & **choroplethr** - can be used together to easily make choroplethGCT-PEPANNRES maps using data from the American Community Survey (ACS), yearly census data collected by the U.S. Census Bureau. To access ACS data you need an API key. Visit <http://api.census.gov/data/key_signup.html>, request a key, and paste it into the line below:
     -   **choroplethrMaps** - contains a global map and maps of the USA used by the choroplethr package.
 
@@ -18,24 +18,25 @@ install.packages(c("acs", "choroplethr", "choroplethrMaps", "maptools", "rgeos",
 api.key.install("<ACS API key>")
 ```
 
--   Example 2: working with shapefiles, projections, and visualization
+-   EXAMPLE 2: Working with Shapefiles, Projections, and Visualization
     -   **maptools** - contains functions for reading and manipulating geographic data, including ESRI shapefiles.
     -   **rgdal** - geospatial data abstraction and projection / transformation.
     -   **RColorBrewer** - provides color schemes that are especially useful for creating thematic maps.
     -   **ggplot2** - package for creating and customizing graphics is R.
     -   **rgeos** - contains functions for performing geometric analysis. For example `gLength()` calculates the length of input geometry, while `gBuffer()` adds a buffer to an input feature.
-    -   **mapproj** - WHERE IS THIS USED? simple package for converting from latitude and logitude into projected coordinates.
--   Example 3: network-type map
+    -   **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
+-   EXAMPLE 3: Migration Distances Map
     -   **maps** another simple set of tools for creating maps, with links to several databases of spatial data.
     -   **geosphere** - supports trigonometric calculations for geographic applications. For example, computing distance to the horizon from a given location and altitude.
     -   **reshape** - reshapes data from 'wide' format (where repeated measurements are located across multiple columns) to 'long' format (where repeated measurements are spread across unique rows)
+    -   **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
 
-EXAMPLE 1: mapping census data
+EXAMPLE 1: Mapping Census Data
 ==============================
 
 ### Packages used - **ACS**, **choroplethr**, **choroplethrMaps**
 
-After installing (see introduction), load needed packages:
+After installing packages (see introduction), load needed packages:
 
 ``` r
 library(acs)
@@ -43,7 +44,7 @@ library(choroplethr)
 library(choroplethrMaps)
 ```
 
-We need an api key to access the ACS data. Visit <http://api.census.gov/data/key_signup.html>, request a key, and paste it into the line below:
+We need an api key to access the ACS data. Visit [link](http://api.census.gov/data/key_signup.html), request a key, and paste it into the line below:
 
 ``` r
 api.key.install("<ACS API key>")
@@ -72,14 +73,18 @@ state_choropleth_acs("B01002", num_colors = 1, zoom = c("texas", "louisiana",
 
 ![US state chloropleth using ACS Median Age by Sex](figures/state_choropleth_acs.png)
 
-EXAMPLE 2: working with shapefiles, projections, and visualization
+EXAMPLE 2: Working with Shapefiles, Projections, and Visualization
 ==================================================================
 
 ### Packages used - **maptools, rgdal, RColorBrewer, ggplot2**
 
+After installing packages (see introduction), load needed packages:
+
 ``` r
 library(maptools)
 library(rgdal)
+library(RColorBrewer)
+library(ggplot2)
 ```
 
 In this example we will work with the data provided along with this tutorial. **Make sure you have unzipped the folder county\_census before proceeding!** The following prompts you to select the provided county census shapefiles at the path ...county\_census/County\_2010Census\_DP1.shp.
@@ -249,8 +254,10 @@ ggplot() + geom_map(data=as.data.frame(florida),aes(map_id = GEOID10,fill=DP0020
 <center>
 ![](figures/florida_2.png)
 </center>
-EXAMPLE 3: network-type map
-===========================
+EXAMPLE 3: Migration Distances Map
+==================================
+
+After installing packages (see introduction), load needed packages:
 
 ### Packages used - **maps, geosphere, reshape, maptools**
 
@@ -258,21 +265,22 @@ EXAMPLE 3: network-type map
 library(maps)
 library(geosphere)
 library(reshape)
+library(maptools)
 ```
 
-select - state\_shapes/tl\_2014\_us\_state.shp
-----------------------------------------------
+Import shapefile of map of continental United States. Choose `state_shapes/tl_2014_us_state.shp` file when prompted.
 
 ``` r
 state <- readShapeSpatial(file.choose())
 ```
 
-select - /state\_migrations\_2014.csv
--------------------------------------
+Import data file of migration distances between U.S.A. states. Choose `state_migrations_2014.csv` file when prompted.
 
 ``` r
 migration <- read.csv(file.choose())
 ```
+
+Extract state names and geographic coordinate (latitude and longitude) information from `state` shapefile; save it into a data frame called `centrs`.
 
 ``` r
 centrs <- data.frame(as.character(state@data$NAME),coordinates(state))
@@ -282,20 +290,17 @@ colnames(centrs) <- c("name","long","lat")
 Reshape - melt
 --------------
 
+Redefine the `migration` data set to only include columns 1 & 6-through-56 of data. Use `melt` function from `reshape` package to transform data set into unique instances of each row of data.
+
 ``` r
 migration <- migration[c(1,6:56)]
 long_mig <- melt(migration,id.vars="from_state") 
-
-map("state")
 ```
 
-<center>
-![](figures/state_outlines.png)
-</center>
 define draw\_from\_state function
 ---------------------------------
 
-<just describe roughly what the following function does. If they want to use it, they can figure it out>
+Create a function to map migration distances from any state selected.
 
 ``` r
 draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alpha=0.5)) {
@@ -314,6 +319,17 @@ draw_from_state <- function(centrs, migrations, state_name, color=rgb(0,0,0,alph
 }
 ```
 
+Draw imported `state` shapefile.
+
+``` r
+map("state")
+```
+
+<center>
+![](figures/state_outlines.png)
+</center>
+Use written function to map migration distances from Florida.
+
 ``` r
 draw_from_state(centrs, long_mig, "Florida", rgb(0,0,1,0.5))
 ```
@@ -321,11 +337,12 @@ draw_from_state(centrs, long_mig, "Florida", rgb(0,0,1,0.5))
 <center>
 ![](figures/paths_from_florida.png)
 </center>
+Draw a world map (limited to North and Central America by creating x- and y-coordinate limits), and subsquently use written function to map migration distances from Wyoming onto map.
+
 ``` r
 xlim <- c(-171.738281, -56.601563)
 ylim <- c(12.039321, 71.856229)
 map("world", col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05, xlim=xlim, ylim=ylim)
-
 draw_from_state(centrs, long_mig, "Wyoming", rgb(1,0,0,.5))
 ```
 
