@@ -8,10 +8,14 @@ output:
   word_document: default
 ---
 
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(tidy = TRUE, fig.align='center')
+```
+
 ## Introduction to R packages for geospatial data
 
 This tutorial introduces a variety of R packages that may be used to manipulate and visualize geospatial data in R. Below we provide short descriptions of the packages used in each example throughout this tutorial, which can to be installed with the following code:
-```{r, eval=FALSE, tidy=TRUE}
+```{r, eval=FALSE}
 install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","mapproj","RColorBrewer","maps","geosphere","rgdal","reshape","ggplot2"))
 ```
 
