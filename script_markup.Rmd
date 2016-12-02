@@ -32,7 +32,9 @@ install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","map
     + **reshape** - reshapes data from 'wide' format (where repeated measurements are located across multiple columns) to 'long' format (where repeated measurements are spread across unique rows) 
     + **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
 
-## Brief Overview:
+## Quick Links to Resources
+
+
 
 # EXAMPLE 1: Mapping Census Data 
 
