@@ -12,9 +12,26 @@ output:
 knitr::opts_chunk$set(tidy = TRUE, fig.align='center')
 ```
 
-## Introduction to R packages for geospatial data
+## Introduction 
 
-This tutorial introduces a variety of R packages that may be used to manipulate and visualize geospatial data in R. Below we provide short descriptions of the packages used in each example throughout this tutorial, which can to be installed with the following code:
+This tutorial walks through three examples demonstrating how geospatial data can be manipulated and visualized in R. We assume you have downloaded R and know how to run R commands. For those unfamiliar with R or GIS mapping, below are a few introductory resources for exploration: 
+
+* R 
+    + [*Tutorials for learning R*](https://www.r-bloggers.com/how-to-learn-r-2/) on r-bloggers.com
+    + [*Quick R*](http://www.statmethods.net/) by Robert I. Kabacoff, Ph.D.
+    + [*R for Data Science*](http://r4ds.had.co.nz/) by Garrett Grolemund and Hadly Wickham
+* GIS mapping  
+    + [*A Gentle Introduction to GIS*](https://docs.qgis.org/2.8/en/docs/gentle_gis_introduction/) by QGIS; map [projections](https://docs.qgis.org/2.8/en/docs/gentle_gis_introduction/coordinate_reference_systems.html#map-projection-in-detail) in particular
+    + [*Introduction to GIS*](http://www.aag.org/galleries/mycoe-files/OT3_GIS_for_beginners.pdf) by the International Centre for Integrated Mountain Development; information about map projections on p.72
+
+As you go through the tutorial, any time you'd like to see more information about a function, place a "?" before its name:
+```{r, eval=FALSE}
+?county_choropleth_acs
+```  
+
+## R packages for geospatial data
+
+Each example within this tutorial introduces a variety of R packages to visualize maps in R. Below we provide short descriptions of the R packages used in each example throughout this tutorial, which can to be installed with the following code:
 ```{r, eval=FALSE, tidy=TRUE}
 install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","mapproj","RColorBrewer","maps","geosphere","rgdal","reshape","ggplot2"))
 ```
@@ -35,10 +52,6 @@ install.packages(c("acs","choroplethr","choroplethrMaps","maptools","rgeos","map
     + **geosphere** - supports trigonometric calculations for geographic applications. For example, computing distance to the horizon from a given location and altitude.
     + **reshape** - reshapes data from 'wide' format (where repeated measurements are located across multiple columns) to 'long' format (where repeated measurements are spread across unique rows) 
     + **mapproj** - simple package for converting from latitude and logitude into projected coordinates.
-
-## Quick Links to Resources
-
-
 
 # EXAMPLE 1: Mapping Census Data 
 
@@ -66,7 +79,7 @@ county_choropleth_acs(tableId="B19301")
 ```
 ![US county chloropleth using ACS per capita income data](figures/county_choropleth_acs.png)
 
-To see the description of a function and its arguments in R, place a "?" before its name:
+To see the description of a function and its arguments in R, remember you can place a "?" before its name:
 ```{r, eval=FALSE}
 ?county_choropleth_acs
 ```
