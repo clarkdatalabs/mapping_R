@@ -24,7 +24,7 @@ This tutorial walks through three examples demonstrating how geospatial data can
     + [*A Gentle Introduction to GIS*](https://docs.qgis.org/2.8/en/docs/gentle_gis_introduction/) by QGIS; map [projections](https://docs.qgis.org/2.8/en/docs/gentle_gis_introduction/coordinate_reference_systems.html#map-projection-in-detail) in particular
     + [*Introduction to GIS*](http://www.aag.org/galleries/mycoe-files/OT3_GIS_for_beginners.pdf) by the International Centre for Integrated Mountain Development; information about map projections on p.72
 
-As you go through the tutorial, any time you'd like to see more information about a function, place a "?" before its name:
+As you go through the tutorial, any time you'd like to see more information about a function, place a `?` before its name:
 ```{r, eval=FALSE}
 ?county_choropleth_acs
 ```  
@@ -127,7 +127,7 @@ plot(florida)
 
 You can look up other state and county codes using the U.S. Census Bureau site: https://www.census.gov/geo/reference/codes/cou.html
 
-###Projection and Layering with RGDAL
+### Projection and Layering with RGDAL
 Next we'll work more with projections using library `rgdal`. We're going to read in a shape file of cultural points in Florida from the supplied data, again using function `readShapeSpatial()`. We know already that our cultural centers layer uses NAD83(HARN) / Florida GDL Albers. We can make the EPSG data frame of projections to find the `prj4` string for this projection (use `?make_EPSG()` to find out more about this table):
 
 ```{r message==FALSE}
@@ -161,6 +161,7 @@ points(cultural_proj)
 ```
 <center>![Florida with cultural points](figures/florida_cultural_points.png)</center>
 
+### Change symbology of points
 You can play around with the symbology for your map with some additional arguments in the `points` function. For example:
 ```{r, eval=FALSE, fig.align='center'}
 plot(florida)
@@ -169,13 +170,14 @@ points(cultural_proj, cex=.8, pch=24, col=554, bg="grey")
 <center>![Florida with cultural triangles](figures/florida_cultural_points2.png)</center>
 
 
-##join polygon data to points
+### Join polygon data to points
+Use `over()` function to overlay `cultural_proj`(points) and `florida`(polygon) layers. 
 ```{r, eval=FALSE}
 county_data <- over(cultural_proj,florida)
 cultural_proj$pop <- county_data$DP0010001
 ```
 
-## set colors
+### Change symbology of points to gradient of colors
 ```{r, message=FALSE}
 library(RColorBrewer)
 ```
@@ -188,7 +190,7 @@ plot(cultural_proj,col=mapcols,pch=20)
 ```
 <center>![](figures/florida_cultural_points_by_pop.png)</center>
 
-####base R instructions for choropleth
+### Base R instructions for choropleth
 
 ```{r, eval=FALSE, fig.align='center'}
 brks <- c(25,30,35,40,45,50,55,60,65)
@@ -201,7 +203,8 @@ legend("bottomleft", legend = levels(cut(florida$DP0020001, brks)), fill = cols,
 ```
 <center>![](figures/florida_choropleth.png)</center>
 
-###using ggplot2
+### Using ggplot2 package
+*ggplot2* is a powerful package for visualizing data and contains a variety of functions that make it versatile. See [`http://docs.ggplot2.org/current/index.html`](http://docs.ggplot2.org/current/index.html) for a helpful list describing ggplot2's various functions. 
 ```{r, message=FALSE, fig.align='center'}
 library(ggplot2)
 ```
