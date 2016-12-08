@@ -1,3 +1,3 @@
 # mapping_R
 
-Install the GDAL complete framework for working on a mac: http://www.kyngchaos.com/software/frameworks
+See workshop instructions and download all necessary files: http://clarkdatalabs.github.io/mapping_R/
