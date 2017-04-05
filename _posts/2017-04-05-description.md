@@ -9,5 +9,5 @@ color: '#2DA0C3'
 tags:
 
 categories:
-introduction: 
+introduction: 'This tutorial walks through three examples demonstrating how geospatial data can be manipulated and visualized in R.'
 ---
